@@ -131,6 +131,6 @@ An ALB (typically managed through the AWS Load Balancer Controller) enables WAF 
 To remove everything:
 ```bash
 cd infra
+docker rmi $(terraform output -raw ecr_repurl):latest
 terraform destroy
-docker rmi hello-app:latest
 ```
