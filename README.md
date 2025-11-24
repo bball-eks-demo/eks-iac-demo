@@ -106,7 +106,7 @@ Only the following AWS resources support WAF associations:
 * API Gateway
 * AppSync
 
-* Because of this platform limitation, the requested design cannot be implemented exactly as written.
+Because of this platform limitation, the requested design cannot be implemented exactly as written.
 
 ### ✔️ What this project delivers
 This deployment completes everything that can be built from the prompt:
