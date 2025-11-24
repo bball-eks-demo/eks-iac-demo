@@ -134,3 +134,4 @@ cd infra
 docker rmi $(terraform output -raw ecr_repurl):latest
 terraform destroy
 ```
+*Note: Destroy operations on EKS resources can take significantly longer due to AWS teardown lag. If Terraform times out, rerunning the destroy or manually removing the EKS cluster and associated ENIs resolves it.*
