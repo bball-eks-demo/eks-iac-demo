@@ -1,5 +1,9 @@
 # Executive Summary
-This project deploys a containerized application to Amazon EKS using Terraform, Docker, and Kubernetes. The original prompt referenced a WAF → NLB → EKS architecture; however, AWS WAF cannot be attached to Network Load Balancers, so the design cannot be implemented exactly as described. This repository delivers everything that is technically achievable with an NLB-based approach and documents the required architectural change, using an ALB, to enable WAF integration in a production-ready setup.
+This project deploys a containerized application to Amazon EKS using Terraform, Docker, and Kubernetes. The original specification outlined a WAF → NLB → EKS layout, but AWS WAF can’t be paired with a Network Load Balancer. Because of that limitation, the setup can’t be implemented exactly as written.
+
+This repository includes everything that can be built with an NLB-based design and explains the architectural adjustment, switching to an ALB, that’s needed to support WAF in a production-ready environment.
+
+See the tradeoffs note: [Tradeoff & Design Notes](https://github.com/bball-eks-demo/eks-iac-demo/tree/main?tab=readme-ov-file#tradeoffs--design-notes)
 
 # Prerequisites
 Install the following tools:
@@ -7,13 +11,13 @@ Install the following tools:
 * AWS CLI
 * kubectl
 * Terraform
-  ```console
+  ```bash
   brew install awscli kubectl terraform
   ```
 
 # AWS CLI Configuration
 Before deploying, authenticate with AWS:
-```console
+```bash
 aws configure
 ```
 You will be prompted for:
@@ -62,7 +66,7 @@ docker buildx build \
 
 (Optional local test, http://localhost:8080)
 ```bash
-docker run -p 8080:8080 hello-app
+ docker run -p 8080:8080 $(terraform output -raw ecr_repurl):latest
 ```
 
 # 3. Configure kubectl for the New Cluster
@@ -97,7 +101,7 @@ echo "http://$(kubectl get svc hello-app-service -o jsonpath='{.status.loadBalan
 ```
 # Tradeoffs & Design Notes
 ### ❌ AWS WAF cannot be placed in front of an NLB
-The original prompt specified the architecture: WAF → NLB → EKS
+The original specification outlined the architecture: WAF → NLB → EKS
 
 AWS does not support attaching a WAF Web ACL to a Network Load Balancer.
 Only the following AWS resources support WAF associations:
@@ -130,5 +134,3 @@ cd infra
 terraform destroy
 docker rmi hello-app:latest
 ```
-
-
